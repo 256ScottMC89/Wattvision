@@ -1,0 +1,193 @@
+#this or wattvision_test works with wattvision_api
+
+#dropdown list:
+#-get
+#-post
+
+#if list is get:
+#display:
+#type text field
+#start_time text field
+#end_time text field
+
+#if list if post
+#display:
+#time text field
+#watts text field
+#watthours text field
+
+#button for go
+#text field for result
+
+import wattvision_api
+import tkinter as tk       
+from tkinter import *
+
+class Application(tk.Frame):    
+
+    def onchange(*args):
+        if variable.get() == "get":
+            time.grid_remove()
+            time_label.grid_remove()
+            watts.grid_remove()
+            watts_label.grid_remove()
+            watthours.grid_remove()
+            watthours_label.grid_remove()
+            type.grid()
+            type_label.grid()
+            start_time.grid()
+            start_time_label.grid()
+            end_time.grid()
+            end_time_label.grid()
+        else:
+            time.grid()
+            time_label.grid()
+            watts.grid()
+            watts_label.grid()
+            watthours.grid()
+            watthours_label.grid()
+            type.grid_remove()
+            type_label.grid_remove()
+            start_time.grid_remove()
+            start_time_label.grid_remove()
+            end_time.grid_remove()
+            end_time_label.grid_remove()
+                
+		
+    def __init__(self, master=None):
+        tk.Frame.__init__(self, master)   
+        self.grid()                       
+        self.createWidgets()
+
+    def createWidgets(self):
+        global variable #used for OptionMenu
+        global entry #used for the result text field
+		
+        global type  #used for the input parameter text fields
+        global start_time
+        global end_time
+        global time
+        global watts
+        global watthours
+        global sensor_id
+        global api_id
+        global api_key
+		
+        global type_label #used for input parameters
+        global start_time_label
+        global end_time_label
+        global time_label
+        global watts_label
+        global watthours_label
+        global sensor_id_label
+        global api_id_label
+        global api_key_label
+		
+		
+		
+        self.goButton = tk.Button(self, text='go',command=execute)            
+        self.goButton.grid()
+		
+        self.quitButton = tk.Button(self, text='quit',command=self.quit)
+        self.quitButton.grid()
+		
+        entry=Entry(self)       #result entry box
+        entry.delete(0,END)
+        entry.insert(0,"result")
+        entry.grid()
+		
+        variable=StringVar(self)        #get and post combo box
+        variable.set("get")
+        variable.trace_variable("w",self.onchange)
+        w=OptionMenu(self,variable,"get","post")
+        w.grid()
+		
+        type=Entry(self)     #type and type label on grid
+        type.delete(0,END)
+        type.insert(0,"type")
+        type_label=Label(self,text="type:")
+        type_label.grid()
+        type.grid()
+		
+        start_time=Entry(self)    #start_time and start_time_label on grid
+        start_time.delete(0,END)
+        start_time.insert(0,"start_time")
+        start_time_label=Label(self,text="start time:")
+        start_time_label.grid()
+        start_time.grid()
+		
+        end_time=Entry(self)    #end_time and end_time_label on grid
+        end_time.delete(0,END)
+        end_time.insert(0,"end_time")
+        end_time_label=Label(self,text="end time:")
+        end_time_label.grid()
+        end_time.grid()
+
+        time=Entry(self)    #time and time_label on grid
+        time.delete(0,END)
+        time.insert(0,"time")
+        time_label=Label(self,text="time:")
+        time_label.grid()
+        time.grid()
+		
+		#watts
+        watts=Entry(self)    #watts and watts_label on grid
+        watts.delete(0,END)
+        watts.insert(0,"watts")
+        watts_label=Label(self,text="watts:")
+        watts_label.grid()
+        watts.grid()
+		
+		#watthours
+        watthours=Entry(self)    #watthours and watthours_label on grid
+        watthours.delete(0,END)
+        watthours.insert(0,"watthours")
+        watthours_label=Label(self,text="watthours:")
+        watthours_label.grid()
+        watthours.grid()
+		
+		#sensor_id
+        sensor_id=Entry(self)    #sensor_id and sensor_id_label on grid
+        sensor_id.delete(0,END)
+        sensor_id.insert(0,"sensor_id")
+        sensor_id_label=Label(self,text="sensor_id:")
+        sensor_id_label.grid()
+        sensor_id.grid()
+		
+		#api_id
+        api_id=Entry(self)    #api_id and api_id_label on grid
+        api_id.delete(0,END)
+        api_id.insert(0,"api_id")
+        api_id_label=Label(self,text="api_id:")
+        api_id_label.grid()
+        api_id.grid()
+		
+		#api_key
+        api_key=Entry(self)    #api_key and api_key_label on grid
+        api_key.delete(0,END)
+        api_key.insert(0,"api_key")
+        api_key_label=Label(self,text="api_key:")
+        api_key_label.grid()
+        api_key.grid()
+
+def execute():
+    
+    if variable.get() == "get" :
+        arr=wattvision_api.get(sensor_id.get(),api_id.get(),api_key.get(),type.get(),start_time.get(),end_time.get())
+
+        entry.delete(0,END)
+        var1=""
+        for i in arr:
+            var1=var1+str(i['v'])+","
+        entry.insert(0,var1)
+		
+    else:
+        entry.delete(0,END)
+        entry.insert(0,wattvision_api.post(sensor_id.get(),api_id.get(),api_key.get(),time.get(),watts.get(),watthours.get()))
+	
+
+		
+app = Application()                       
+app.master.title('Sample application')    
+app.mainloop()                        
+
