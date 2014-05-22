@@ -15,3 +15,5 @@ start_time (YYYY-MM-DDTHH:MM:SS)
 end_time (YYYY-MM-DDTHH:MM:SS)
 
 This code requires the requests library to be installed, instructions for installing it are here http://docs.python-requests.org/en/latest/user/install/
+
+either wattvision_test or wattvision_gui will work with wattvision_api
